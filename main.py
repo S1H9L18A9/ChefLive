@@ -3,11 +3,14 @@ from time import sleep
 import subprocess           #so I can send terminal commands
 from sys import exit        #exit closes the program at any point, less if-else
 import pyautogui as pg      #that's our keyboard/mouse controller, pg is alias
-import win32gui, win32con
+import win32gui
+import importlib
 
 
 def main():
     #First we open up the scrcpy append
+    help_select = int(input('Enter the level of help you want: '))
+
     window_name = open_scrcpy_window_name()
     print(window_name)
     all_window_names = pg.getAllTitles()
@@ -17,8 +20,16 @@ def main():
     if not switch_to_window(window_name):
         print(f'Could not switch to {window_name}, closing')
         exit()
-    
+    level_found = find_level()
+    if not (level_found is None):
+        module = importlib.import_module(f'levels.{level_found}')
+        if hasattr(module, 'execute'):
+            module.execute(help_select)
     input()
+
+
+def find_level():
+    return 'eggs'
 
 
 def open_scrcpy_window_name():
