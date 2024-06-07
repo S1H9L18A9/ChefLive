@@ -8,9 +8,13 @@ import importlib
 
 
 def main():
-    #First we open up the scrcpy append
-    help_select = int(input('Enter the level of help you want: '))
+    # help select will be a lever to decide how much help I need
+    # Also allow customizing of help. I thought automating the whole game will make it boring
+    # More number in help_select, more help given(assuming that level file supports it)
+    # Higher number is better
+    help_select = int(input('Enter the level of help you want: '))  
 
+    #First we open up the scrcpy append
     window_name = open_scrcpy_window_name()
     print(window_name)
     all_window_names = pg.getAllTitles()
@@ -22,14 +26,24 @@ def main():
         exit()
     level_found = find_level()
     if not (level_found is None):
-        module = importlib.import_module(f'levels.{level_found}')
-        if hasattr(module, 'execute'):
-            module.execute(help_select)
+        module = importlib.import_module(f'levels.{level_found}')   #Dynamically import that level file. 
+        if hasattr(module, 'execute'):                              #All level files will have an execute fn
+            module.execute(help_select)                             #that we invoke
     input()
 
 
 def find_level():
-    return 'eggs'
+    '''This function figures out which level are we on. Each level will have a pause screenshot, 
+    that is unique to that level. If it is found, then that name is sent back. The name sent back
+    is going to be the exact name of the file for that script. 
+    
+    Eg. Pause screenshot found in the 
+    window is 'eggs.png' then eggs is sent back, and it is assumed eggs.py exists in levels folder
+    
+    We remove the screenshot from here to work on a file so it is not taken without needing to delete the 
+    script file. Yes, scripts have special treatment.'''
+    
+    return 'eggs' # Lol this is too much work, TODO later
 
 
 def open_scrcpy_window_name():
